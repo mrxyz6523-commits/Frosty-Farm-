@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrostyFarm NFT - Register & Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: linear-gradient(45deg, transparent, rgba(0,255,255,0.1), rgba(255,0,255,0.1), transparent);
+            animation: auroraShift 10s ease-in-out infinite;
+        }
+        @keyframes auroraShift {
+            0%, 100% { transform: translateX(-100%) skewX(-45deg); opacity: 0.5; }
+            50% { transform: translateX(100%) skewX(-45deg); opacity: 1; }
+        }
+        .auth-container {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #4a90e2;
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            color: #50c9c3;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(80,201,195,0.5);
+        }
+        p {
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a90e2;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #4a90e2;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #50c9c3;
+            box-shadow: 0 0 10px rgba(80,201,195,0.3);
+        }
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4a90e2, #50c9c3);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74,144,226,0.4);
+        }
+        .toggle-auth {
+            background: none;
+            color: #50c9c3;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            border: none;
+        }
+        .toggle-auth:hover {
+            color: #fff;
+        }
+        #status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .success {
+            background: rgba(80,201,195,0.2);
+            color: #50c9c3;
+            border: 1px solid #50c9c3;
+        }
+        .error {
+            background: rgba(255,0,0,0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+        .particle {
+            position: fixed;
+            background: rgba(80,201,195,0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 3s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora"></div>
+    
+    <div class="auth-container" id="auth-container">
+        <h1>🌍 FrostyFarm NFT 🌱</h1>
+        <p>Join the polar adventure on SidraChain. Register or login to start exploring!</p>
+        
+        <form id="auth-form">
+            <div class="form-group" id="username-group" style="display: none;">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Choose a unique username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="your@email.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Secure password" required>
+            </div>
+            
+            <div class="form-group" id="confirm-password-group" style="display: none;">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+            </div>
+            
+            <button type="submit" id="submit-btn">Login</button>
+        </form>
+        
+        <button class="toggle-auth" id="toggle-btn" onclick="toggleAuth()">Need to Register? Click Here</button>
+        
+        <div id="status-message"></div>
+    </div>
+
+    <script>
+        let isRegister = false;
+        const form = document.getElementById('auth-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const statusMsg = document.getElementById('status-message');
+        const usernameGroup = document.getElementById('username-group');
+        const confirmPasswordGroup = document.getElementById('confirm-password-group');
+
+        function toggleAuth() {
+            isRegister = !isRegister;
+            if (isRegister) {
+                submitBtn.textContent = 'Register';
+                toggleBtn.textContent = 'Already have an account? Login';
+                usernameGroup.style.display = 'block';
+                confirmPasswordGroup.style.display = 'block';
+            } else {
+                submitBtn.textContent = 'Login';
+                toggleBtn.textContent = 'Need to Register? Click Here';
+                usernameGroup.style.display = 'none';
+                confirmPasswordGroup.style.display = 'none';
+            }
+            clearForm();
+        }
+
+        function clearForm() {
+            form.reset();
+            statusMsg.style.opacity = '0';
+        }
+
+        function showMessage(text, type) {
+            statusMsg.textContent = text;
+            statusMsg.className = type;
+            statusMsg.style.opacity = '1';
+            setTimeout(() => { statusMsg.style.opacity = '0'; }, 3000);
+        }
+
+        function createParticles(count = 20) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.width = Math.random() * 4 + 2 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 4000);
+                }, i * 100);
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (isRegister) {
+                const username = document.getElementById('username').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (!username) {
+                    showMessage('Username is required!', 'error');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showMessage('Passwords do not match!', 'error');
+                    return;
+                }
+                
+                // Simulate registration (in real app, send to backend/SidraChain)
+                console.log('Registering:', { username, email, password });
+                showMessage(`Welcome, ${username}! Account created on SidraChain. Redirecting to game...`, 'success');
+                createParticles(30);
+                setTimeout(() => {
+                    // Redirect to game page
+                    window.location.href = 'frostyfarm-immersive.html'; // Assume game page exists
+                }, 2000);
+            } else {
+                // Simulate login (in real app, validate with backend/SidraChain)
+                console.log('Logging in:', { email, password });
+                showMessage('Login successful! Entering polar realms...', 'success');
+                createParticles(20);
+                setTimeout(() => {
+                    // Redirect to game page
+                    window.location.href = 'frostyfarm-immersive.html';
+                }, 1500);
+            }
+        });
+
+        // Initialize
+        toggleAuth(); // Start with register mode
+    </script>
+</body>
+</html>
